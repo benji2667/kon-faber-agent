@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+README.md
+plans/
+project-docs/
+attachments/
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.vscode/
+.idea/

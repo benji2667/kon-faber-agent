@@ -1,0 +1,13 @@
+.env
+.env.local
+.env.*.local
+SECRETS.local.md
+*.secrets.md
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.vscode/
+.idea/
+.hermes/
+*.log
