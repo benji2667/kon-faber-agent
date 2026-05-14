@@ -6,9 +6,11 @@ See [`../plans/`](../plans/) for full architecture, plan, and decision log.
 
 ---
 
-## Phase 0 — Foundation
+## Phase 0 — Foundation ✅ DONE
 
-Goal: get a vanilla Hermes container running on Railway, talking to a Telegram bot you control.
+See [`docs/phase-0-done.md`](docs/phase-0-done.md) for what worked, lessons learned, and current config.
+
+Goal was: get a vanilla Hermes container running on Railway, talking to a Telegram bot you control.
 
 ### What you need to do before we deploy
 
