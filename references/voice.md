@@ -1,0 +1,109 @@
+# Voice
+
+How a Kon Faber outreach email should *feel*. This is the Bible — the rules of taste, not the workflow.
+
+If the agent has to choose between violating a rule in here and following the workflow, **the voice wins.**
+
+---
+
+## Grundton
+
+Locker, direkt, auf Augenhöhe. Nie wie eine Booking-Agentur, immer wie zwei Musiker die Bock haben. Selbstbewusst, aber nicht arrogant. Credentials werden genannt, nicht angegeben. Persönlich wo möglich. Kurze Sätze, kein Marketing-Sprech, keine Floskeln.
+
+The reader should feel: "two people wrote this to me specifically," not "a sequence reached my inbox."
+
+## Sprache
+
+| Language | Register |
+|---|---|
+| **Deutsch** | Locker, duzen (außer bei sehr formalen Festivals), direkt. |
+| **English** | Slightly more formal than the German, but still warm and personal. Never stiff or corporate. |
+
+**Choose by org context, not by country.** Indicators: mail domain (`.com` vs `.de`), website language, content language. International orgs based in Germany (Gardens of Babylon, etc.) get English.
+
+## Length
+
+Touch 1 stays compact — typically **60-90 words**. Touch 2 and 3 tighter still, **30-50 words**. Better to lose a beat than pad one. If a sentence isn't earning its place, cut it.
+
+The 80-word cap on Touch 1 isn't arbitrary — bookers skim. A long opener reads like a pitch deck. A short one reads like a colleague.
+
+## Components of a Touch 1
+
+Ordered loosely:
+
+- **Hook** — a specific, lineup-rooted reason this venue caught our attention. Never generic. *Always opens.*
+- **Who we are** — see "Sacred lines" below. Verbatim.
+- **Ask** — the request to play. Comes before proof, not after. We want a gig, not a CV review.
+- **Proof** — one or two headline credentials (tour, release, KONVERGE). Not a list.
+- **One link** — EPK for Touch 1 and 3, Sisyphos for Touch 2. Never two links in one mail.
+- **CTA question** — short, open, not pushy.
+- **Sign-off** — "Bene & Nils".
+
+Order can flex if it serves the read. Hook always opens. Ask always comes before proof. Beyond that — taste.
+
+## Subject lines
+
+1-5 words. No `Re:` manipulation on first contact. No ALL-CAPS. No emoji.
+
+Examples (use as anchors, not as a list to cycle through):
+- DE: "Live-Set bei [Venue]?", "Kon Faber für [Festival]?", "Slot frei?", "Anfrage [Venue]"
+- EN: "Live set at [Venue]?", "Kon Faber for [Festival]?", "Slot open?", "Inquiry [Venue]"
+
+The agent should vary subject patterns across runs. Repeating the same template makes the inbox-level pattern obvious.
+
+Follow-ups (Touch 2, Touch 3, replies) use `Re: [Original-Subject]` — that's contextual, not manipulative.
+
+## Tour phrasing
+
+Soft, present-leaning. Avoid year-anchored phrases that age badly.
+
+- DE: "Wir haben gerade in Neuseeland und Südafrika getourt"
+- EN: "We've just toured New Zealand and South Africa"
+
+Never "Anfang des Jahres" / "earlier this year".
+
+## Sacred lines (verbatim, never paraphrase)
+
+These two sentences are the voice anchor. The agent must use them exactly, not "improve" or "vary" them.
+
+**DE:** *"Wir sind Kon Faber, ein elektronisches Live-Duo aus Berlin, mit Synthesizern und einem treibenden, durchproduzierten Clubsound."*
+
+**EN:** *"We're Kon Faber, an electronic live duo from Berlin, with synthesizers and a driving, polished club sound."*
+
+Sign-off, every mail: **"Bene & Nils"**.
+
+## Don'ts (voice, not regex)
+
+The agent should *feel* these, not check a list. If you're tempted to do any of these, the reader can tell.
+
+- **No em-dashes (—).** Looks like AI text. Use commas, full stops, or restructure. Hyphens in compounds (Live-Set, Open-Air) are fine.
+- **No hyperbole.** "mega", "nice", "krass", "der Wahnsinn", "incredible", "amazing", "truly unique" — all forbidden. Substitute: "gefällt uns sehr", "richtig Lust", "schöne Ergänzung", "happy", "would love".
+- **No equipment lists.** Not "selbstgebaute Controller, Moog, Vocals" — just "Synths und Vocals". The reader doesn't care what gear we use; they care whether they want to book us.
+- **No constructed connections.** If we don't have a real reason to know about a venue, don't fabricate one. Genre/city is enough as a Tier-3 hook.
+- **No formality.** "Sehr geehrte Damen und Herren" — never. "Dear sir/madam" — never.
+- **Live set first.** Live is the primary product. DJ set is the optional second angle (Touch 2). Pitching DJ before live undermines the live offering.
+- **One link only.** Two links signals "marketing email" to the reader and to inbox filters.
+- **No three-paragraph templates.** Three short paragraphs of 2-3 sentences each is the universally-recognised cold-email shape. If the agent finds itself producing that, refactor to a different rhythm.
+- **No adjective tricolons.** "authentic, raw, electric" — three generic adjectives back to back read as marketing-speak. Cut to one or none.
+- **If it reads like an outreach playbook, rewrite it.** This is the single highest rule. The agent should pause before saving any draft and ask: "Could this have been generated by a sequence?"
+
+## Reply-specific voice
+
+In reply drafts (B1 auto-handle), the voice softens slightly because rapport exists:
+
+- Drop the verbatim self-introduction — they already know us.
+- Drop the EPK opener — they already have the link.
+- **End every B1 reply with a concrete question** that moves the thread forward.
+- Tone: "freut uns" / "glad to hear" — warmer, less pitch-y.
+
+## What this Bible doesn't contain
+
+These have moved elsewhere — see the [references README](README.md):
+
+- **Workflow logic** (cadence, anti-duplicate, CRM-sync) → `skills/outreach.py`
+- **Factual ground truth** (tours, references, achievements) → `facts.md`
+- **Date-bound release tempus rules** → `release-calendar.md`
+- **Example mails as anchors** → `templates.md`
+- **Reply classification heuristics** → `replies.md`
+- **AI-pattern regex linter** → `skills/outreach.py` (as code, runs after drafting)
+- **Audit log** → `../audit/bible-audits.md`
