@@ -11,6 +11,13 @@
 #
 # After that we exec the upstream entrypoint, which handles the gosu drop
 # to the hermes user and the usual config/.env bootstrap.
+#
+# Note: we deliberately do NOT call `hermes gateway setup --platform telegram`
+# here. The upstream Hermes entrypoint already discovers TELEGRAM_BOT_TOKEN
+# from env and configures the Telegram gateway automatically. An earlier
+# version of this script tried to call `gateway setup` and printed a
+# `warn: gateway setup telegram failed` line on every boot — the upstream
+# behaviour is what we want, so we let it happen and stay silent.
 
 set -e
 
@@ -51,18 +58,6 @@ if [ "$(id -u)" = "0" ]; then
     apply_config "model.fast"                   "${HERMES_FAST_MODEL:-}"
     apply_config "provider.openrouter.api_key"  "${OPENROUTER_API_KEY:-}"
     apply_config "provider.tavily.api_key"      "${TAVILY_API_KEY:-}"
-
-    # 3. Configure Telegram gateway if a token is provided. This is idempotent
-    #    — reapplying it on each boot overwrites the token in config.yaml,
-    #    which is what we want when rotating tokens. Pairing approval state
-    #    (kept separately on the volume) is preserved across restarts.
-    if [ -n "${TELEGRAM_BOT_TOKEN:-}" ]; then
-        if gosu hermes "$HERMES_BIN" gateway setup --platform telegram --token "$TELEGRAM_BOT_TOKEN" >/dev/null 2>&1; then
-            echo "[startup] gateway setup telegram"
-        else
-            echo "[startup] warn: gateway setup telegram failed"
-        fi
-    fi
 fi
 
 # Hand off to upstream entrypoint. It does the gosu drop and final exec.
