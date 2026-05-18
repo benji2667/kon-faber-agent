@@ -7,11 +7,14 @@ COPY skills/      /opt/agent/skills/
 COPY references/  /opt/agent/references/
 COPY audit/       /opt/agent/audit/
 
-# Custom MCP servers (currently: Gmail). Install deps directly to system
-# python — base image lacks python3-venv. Hermes itself runs out of
-# /opt/hermes/.venv so this won't collide.
+# Custom MCP servers (currently: Gmail). Base image ships python3 but NOT
+# pip or ensurepip; install python3-pip via apt before pip-installing deps.
+# Hermes itself runs out of /opt/hermes/.venv so this won't collide.
 COPY mcp_servers/ /opt/agent/mcp_servers/
-RUN python3 -m pip install --no-cache-dir --break-system-packages \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3-pip \
+    && rm -rf /var/lib/apt/lists/* \
+    && python3 -m pip install --no-cache-dir --break-system-packages \
         mcp \
         google-auth \
         google-api-python-client
