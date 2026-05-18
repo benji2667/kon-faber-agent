@@ -24,7 +24,7 @@ set -e
 HERMES_HOME="${HERMES_HOME:-/opt/data}"
 HERMES_BIN=/opt/hermes/.venv/bin/hermes
 UPSTREAM_ENTRYPOINT=/opt/hermes/docker/entrypoint.sh
-MCP_VENV_PYTHON=/opt/agent/mcp_venv/bin/python3
+MCP_PYTHON=python3
 
 if [ "$(id -u)" = "0" ]; then
     # 1. Repair volume perms.
@@ -76,7 +76,7 @@ mcp_servers:
     env:
       SUPABASE_ACCESS_TOKEN: "${SUPABASE_ACCESS_TOKEN}"
   gmail:
-    command: "${MCP_VENV_PYTHON}"
+    command: "${MCP_PYTHON}"
     args: ["/opt/agent/mcp_servers/gmail_server.py"]
     env:
       GMAIL_CLIENT_ID: "${GMAIL_CLIENT_ID}"
