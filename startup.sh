@@ -19,18 +19,27 @@
 # here. The upstream Hermes entrypoint already discovers TELEGRAM_BOT_TOKEN
 # from env and configures the Telegram gateway automatically.
 
-set -e
+set -euo pipefail
 
 HERMES_HOME="${HERMES_HOME:-/opt/data}"
 HERMES_BIN=/opt/hermes/.venv/bin/hermes
 UPSTREAM_ENTRYPOINT=/opt/hermes/docker/entrypoint.sh
 MCP_PYTHON=python3
 
+log() { echo "[startup] $*"; }
+warn() { echo "[startup] WARN: $*" >&2; }
+fatal() { echo "[startup] FATAL: $*" >&2; exit 1; }
+
+# Sanity check upstream artifacts before we even try to run.
+[ -x "$HERMES_BIN" ]            || fatal "hermes binary missing at $HERMES_BIN — base image changed?"
+[ -x "$UPSTREAM_ENTRYPOINT" ]   || fatal "upstream entrypoint missing at $UPSTREAM_ENTRYPOINT"
+command -v gosu >/dev/null      || fatal "gosu missing in base image"
+
 if [ "$(id -u)" = "0" ]; then
     # 1. Repair volume perms.
     if [ -d "$HERMES_HOME" ]; then
         chown -R hermes:hermes "$HERMES_HOME" 2>/dev/null || \
-            echo "[startup] warn: chown $HERMES_HOME failed (continuing)"
+            warn "chown $HERMES_HOME failed (continuing)"
     fi
 
     # 2. Apply config from env vars as the hermes user.
@@ -44,12 +53,14 @@ if [ "$(id -u)" = "0" ]; then
     apply_config() {
         local key="$1"
         local value="$2"
-        if [ -n "$value" ]; then
-            if gosu hermes "$HERMES_BIN" config set "$key" "$value" >/dev/null 2>&1; then
-                echo "[startup] config set $key"
-            else
-                echo "[startup] warn: failed to set $key"
-            fi
+        if [ -z "$value" ]; then
+            return 0
+        fi
+        local err
+        if err=$(gosu hermes "$HERMES_BIN" config set "$key" "$value" 2>&1 >/dev/null); then
+            log "config set $key"
+        else
+            warn "failed to set $key: ${err:-unknown error}"
         fi
     }
 
@@ -65,8 +76,18 @@ if [ "$(id -u)" = "0" ]; then
     # on Hermes doing env-var substitution. Re-runs on every boot are no-ops
     # once the block is present.
     CFG="$HERMES_HOME/config.yaml"
-    if ! grep -q "^mcp_servers:" "$CFG" 2>/dev/null; then
-        if [ -n "${GMAIL_REFRESH_TOKEN:-}" ] && [ -n "${SUPABASE_ACCESS_TOKEN:-}" ]; then
+    if grep -q "^mcp_servers:" "$CFG" 2>/dev/null; then
+        log "mcp_servers already present in config.yaml"
+    else
+        missing=()
+        [ -z "${GMAIL_CLIENT_ID:-}" ]        && missing+=(GMAIL_CLIENT_ID)
+        [ -z "${GMAIL_CLIENT_SECRET:-}" ]    && missing+=(GMAIL_CLIENT_SECRET)
+        [ -z "${GMAIL_REFRESH_TOKEN:-}" ]    && missing+=(GMAIL_REFRESH_TOKEN)
+        [ -z "${SUPABASE_ACCESS_TOKEN:-}" ]  && missing+=(SUPABASE_ACCESS_TOKEN)
+        if [ ${#missing[@]} -ne 0 ]; then
+            warn "mcp_servers block SKIPPED — missing env vars: ${missing[*]}"
+            warn "Hermes will boot WITHOUT Gmail/Supabase MCP. Set these in Railway and redeploy."
+        else
             cat >> "$CFG" <<EOF
 
 mcp_servers:
@@ -84,12 +105,8 @@ mcp_servers:
       GMAIL_REFRESH_TOKEN: "${GMAIL_REFRESH_TOKEN}"
 EOF
             chown hermes:hermes "$CFG" 2>/dev/null || true
-            echo "[startup] mcp_servers injected (gmail + supabase)"
-        else
-            echo "[startup] warn: GMAIL_* or SUPABASE_ACCESS_TOKEN missing, mcp_servers block skipped"
+            log "mcp_servers injected (gmail + supabase)"
         fi
-    else
-        echo "[startup] mcp_servers already present in config.yaml"
     fi
 fi
 
