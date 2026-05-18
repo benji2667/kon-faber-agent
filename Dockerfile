@@ -7,6 +7,15 @@ COPY skills/      /opt/agent/skills/
 COPY references/  /opt/agent/references/
 COPY audit/       /opt/agent/audit/
 
+# Custom MCP servers (currently: Gmail). Run in a dedicated venv so we don't
+# clash with Hermes' own /opt/hermes/.venv.
+COPY mcp_servers/ /opt/agent/mcp_servers/
+RUN python3 -m venv /opt/agent/mcp_venv \
+    && /opt/agent/mcp_venv/bin/pip install --no-cache-dir \
+        mcp \
+        google-auth \
+        google-api-python-client
+
 # Startup wrapper: fixes volume perms + applies hermes config from env vars.
 # Sits in front of the upstream entrypoint, which still handles the gosu drop.
 COPY startup.sh /opt/agent/startup.sh
